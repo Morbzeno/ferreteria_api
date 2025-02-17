@@ -25,7 +25,7 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:50',
             'tags' => 'required|array',
-            'description' => 'required|string|max:50'
+            'description' => 'required|string|max:200'
         ]);
 
         $categories = new Category();
