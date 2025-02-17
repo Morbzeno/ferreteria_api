@@ -10,10 +10,17 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->get();
-        return response()->json($products->toArray(), 200);
+        $query = Product::query();
+        if ($request->has('search')){
+            $search = $request = $request->input('search');
+
+            $query->where('name', 'regexp', new \MongoDB\BSON\Regex($search, 'i'));
+        }
+        // return response()->json(Product::all());
+        $products = $query->with('category')->get();
+        return response()->json($products);
     }
     
     

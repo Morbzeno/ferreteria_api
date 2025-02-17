@@ -10,10 +10,16 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Category::query();
+        if ($request->has('search')){
+            $search = $request = $request->input('search');
+
+            $query->where('name', 'regexp', new \MongoDB\BSON\Regex($search, 'i'));
+        }
         // return response()->json(Category::all());
-        $categories = Category::with('products')->get();
+        $categories = $query->with('products')->get();
         return response()->json($categories);
     }
 
@@ -42,9 +48,18 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($id,Request $request )
     {
-        $categories = Category::with('products')->find($id);
+
+        $query = Category::query();
+        if ($request->has('search')){
+            $search = $request = $request->input('search');
+
+            $query->where('name', 'regexp', new \MongoDB\BSON\Regex($search, 'i'));
+        }
+        // return response()->json(Category::all());
+        $categories = $query->with('products')->find($id);
+        return response()->json($categories);
         return $categories ? response()->json($categories) : response()->json(['error' => 'categorie no encontrado'], 404);
 
     }
