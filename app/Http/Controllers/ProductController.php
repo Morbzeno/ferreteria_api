@@ -58,7 +58,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $products = Product::find($id);
+        $products = Product::with('category')->find($id);
         return $products ? response()->json($products) : response()->json(['error' => 'producto no encontrado'], 404);
     }
 
