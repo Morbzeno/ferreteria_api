@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('brands_collection', function (Blueprint $table) {
+        Schema::create('products_carts', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
         });
@@ -22,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('brands_collection');
+        Schema::dropIfExists('products_carts_collection');
     }
 };

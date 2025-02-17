@@ -67,7 +67,42 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $products = Products::findorfail($id);
+        if(!$products){
+            return response()->json([
+                'message' => 'producto no encontrado'
+            ], 400);
+        }
+    
+        $request->validate([
+            'category_id' => 'required',
+            'name' => 'required|string|max:50'
+            // 'brand_id' => 'required|',
+            // 'sell_price' => 'required|double',
+            // 'buy_price' => 'required|double',
+            // 'bar_code' => 'required',
+            // 'stock' => 'required|number',
+            // 'description' => 'required|string|max:200',
+            // 'state' => 'required',
+            // 'wholesare_price' => 'required|double',
+            // 'image' =>  'required|array'
+        ]);
+        $products = new Product();
+        $products->category_id = $request->category_id;
+        $products->name = $request->name;
+        // $products->brand_id = $request->brand_id;
+        // $products->sell_price = $request->sell_price;
+        // $products->bar_code = $request->bar_code;
+        // $products->stock = $request->stock;
+        // $products->description = $request->description;
+        // $products->state = $request->state;
+        // $products->wholesare_price = $request->wholesare_price;
+        // $products->image = $request->image;
+        $products->save();
+        return response()->json([
+            'message' => 'producto insertado correctamente',
+            'data' => $products
+        ], 201);
     }
 
     /**

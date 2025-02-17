@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('directions_collection', function (Blueprint $table) {
+        Schema::create('directions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
         });
