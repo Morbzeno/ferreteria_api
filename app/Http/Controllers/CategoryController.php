@@ -16,10 +16,12 @@ class CategoryController extends Controller
         if ($request->has('search')){
             $search = $request = $request->input('search');
 
-            $query->where('name', 'regexp', new \MongoDB\BSON\Regex($search, 'i'));
-        }
+            $query->where(function ($q) use ($search){
+                $q->orwhere('name', 'regexp', new \MongoDB\BSON\Regex($search, 'i'))->orwhere('tags', 'regexp', new \MongoDB\BSON\Regex($search, 'i'));
+        });
+    }
         // return response()->json(Category::all());
-        $categories = $query->with('products')->get();
+        $categories = $query->with('products')->paginate(3);
         return response()->json($categories);
     }
 

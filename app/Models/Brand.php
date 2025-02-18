@@ -8,25 +8,21 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Authenticatable;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-class User extends Authenticatable
+class Brand extends Model
 {
     use HasApiTokens, Notifiable, Authenticatable;
     protected $connection= 'mongodb';
-    protected $collection= 'Users';
-    protected $fillable = [
-        'name',
-        'last_name',
-        'image',
-        'email',
-        'phone',
-        'rfc',
-        'password',
-        'role',
-        'google_id'
-    ];
+    protected $collection= 'brands';
 
-    public function directions()
+    protected $fillable = [
+        "name",
+        "description",
+        "contact",
+        "image"
+    ];
+    public function products()
     {
-        return $this->hasMany(Direction::class, 'direction_id', '_id'); 
+        return $this->hasMany(Product::class, 'brand_id', '_id'); 
     }
 }
+

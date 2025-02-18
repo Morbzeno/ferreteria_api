@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('directions', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->index();
+            $table->string('postal_code')->index();
             $table->timestamps();
         });
     }

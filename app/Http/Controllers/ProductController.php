@@ -19,7 +19,7 @@ class ProductController extends Controller
             $query->where('name', 'regexp', new \MongoDB\BSON\Regex($search, 'i'));
         }
         // return response()->json(Product::all());
-        $products = $query->with('category')->get();
+        $products = $query->with('category')->with('brand')->get();
         return response()->json($products);
     }
     
@@ -31,8 +31,8 @@ class ProductController extends Controller
     {
         $request->validate([
             'category_id' => 'required',
-            'name' => 'required|string|max:50'
-            // 'brand_id' => 'required|',
+            'name' => 'required|string|max:50',
+            'brand_id' => 'required|'
             // 'sell_price' => 'required|double',
             // 'buy_price' => 'required|double',
             // 'bar_code' => 'required',
@@ -45,7 +45,7 @@ class ProductController extends Controller
         $products = new Product();
         $products->category_id = $request->category_id;
         $products->name = $request->name;
-        // $products->brand_id = $request->brand_id;
+        $products->brand_id = $request->brand_id;
         // $products->sell_price = $request->sell_price;
         // $products->bar_code = $request->bar_code;
         // $products->stock = $request->stock;
@@ -65,7 +65,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $products = Product::with('category')->find($id);
+        $products = Product::with('category')->with('brand')->find($id);
         return $products ? response()->json($products) : response()->json(['error' => 'producto no encontrado'], 404);
     }
 
@@ -74,16 +74,16 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $products = Products::findorfail($id);
+        $products = Product::findorfail($id);
         if(!$products){
             return response()->json([
                 'message' => 'producto no encontrado'
             ], 400);
         }
     
-        $request->validate([
-            'category_id' => 'required',
-            'name' => 'required|string|max:50'
+        $validation = $request->validate([
+            'category_id' => '',
+            'name' => '|string|max:50'
             // 'brand_id' => 'required|',
             // 'sell_price' => 'required|double',
             // 'buy_price' => 'required|double',
@@ -94,18 +94,8 @@ class ProductController extends Controller
             // 'wholesare_price' => 'required|double',
             // 'image' =>  'required|array'
         ]);
-        $products = new Product();
-        $products->category_id = $request->category_id;
-        $products->name = $request->name;
-        // $products->brand_id = $request->brand_id;
-        // $products->sell_price = $request->sell_price;
-        // $products->bar_code = $request->bar_code;
-        // $products->stock = $request->stock;
-        // $products->description = $request->description;
-        // $products->state = $request->state;
-        // $products->wholesare_price = $request->wholesare_price;
-        // $products->image = $request->image;
-        $products->save();
+
+        $products->update($validation);
         return response()->json([
             'message' => 'producto insertado correctamente',
             'data' => $products
